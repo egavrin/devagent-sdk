@@ -1,0 +1,18 @@
+{
+  "protocolVersion": "0.1",
+  "taskId": "task-plan-1",
+  "status": "success",
+  "artifacts": [
+    {
+      "kind": "plan",
+      "path": "/tmp/artifacts/task-plan-1/plan.md",
+      "mimeType": "text/markdown",
+      "createdAt": "2026-03-10T08:05:00.000Z"
+    }
+  ],
+  "metrics": {
+    "startedAt": "2026-03-10T08:00:00.000Z",
+    "finishedAt": "2026-03-10T08:05:00.000Z",
+    "durationMs": 300000
+  }
+}

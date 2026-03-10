@@ -1,0 +1,49 @@
+{
+  "protocolVersion": "0.1",
+  "taskId": "task-implement-1",
+  "taskType": "implement",
+  "project": {
+    "id": "project-1",
+    "name": "devagent-hub",
+    "repoRoot": "/tmp/devagent-hub",
+    "repoFullName": "egavrin/devagent-hub"
+  },
+  "workItem": {
+    "kind": "github-issue",
+    "externalId": "42",
+    "title": "Refactor orchestration"
+  },
+  "workspace": {
+    "sourceRepoPath": "/tmp/devagent-hub",
+    "baseRef": "main",
+    "workBranch": "devagent/implement/task-implement-1",
+    "isolation": "git-worktree"
+  },
+  "executor": {
+    "executorId": "claude",
+    "profileName": "strong",
+    "provider": "anthropic",
+    "model": "sonnet",
+    "reasoning": "high",
+    "approvalMode": "auto-edit"
+  },
+  "constraints": {
+    "maxIterations": 10,
+    "timeoutSec": 3600,
+    "allowNetwork": false
+  },
+  "context": {
+    "summary": "Implement the approved cutover.",
+    "changedFilesHint": [
+      "src/workflow/orchestrator.ts",
+      "src/state/store.ts"
+    ],
+    "skills": [
+      "runner-integration",
+      "testing"
+    ]
+  },
+  "expectedArtifacts": [
+    "implementation-summary"
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "protocolVersion": "0.1",
+  "taskId": "task-golden-1",
+  "taskType": "plan",
+  "project": {
+    "id": "project-1",
+    "name": "devagent-hub",
+    "repoRoot": "/tmp/devagent-hub",
+    "repoFullName": "egavrin/devagent-hub"
+  },
+  "workItem": {
+    "kind": "github-issue",
+    "externalId": "42",
+    "title": "Refactor orchestration",
+    "url": "https://github.com/egavrin/devagent-hub/issues/42"
+  },
+  "workspace": {
+    "sourceRepoPath": "/tmp/devagent-hub",
+    "baseRef": "main",
+    "workBranch": "devagent/plan/task-golden-1",
+    "isolation": "git-worktree"
+  },
+  "executor": {
+    "executorId": "devagent",
+    "profileName": "default",
+    "provider": "chatgpt",
+    "model": "gpt-5.4",
+    "reasoning": "medium",
+    "approvalMode": "full-auto"
+  },
+  "constraints": {
+    "maxIterations": 6,
+    "timeoutSec": 900,
+    "allowNetwork": true
+  },
+  "context": {
+    "summary": "Produce the canonical implementation plan.",
+    "issueBody": "Move Hub to the SDK/Runner execution path.",
+    "comments": [
+      {
+        "author": "eg",
+        "body": "Preserve the stage semantics from WORKFLOW.md."
+      }
+    ],
+    "changedFilesHint": [
+      "src/workflows/service.ts",
+      "src/runner-client/local-runner-client.ts"
+    ],
+    "skills": [
+      "runner-integration",
+      "testing"
+    ],
+    "extraInstructions": [
+      "Keep the cutover complete.",
+      "Avoid adding compatibility shims."
+    ]
+  },
+  "expectedArtifacts": [
+    "plan"
+  ]
+}

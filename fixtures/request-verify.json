@@ -1,0 +1,42 @@
+{
+  "protocolVersion": "0.1",
+  "taskId": "task-verify-1",
+  "taskType": "verify",
+  "project": {
+    "id": "project-1",
+    "name": "devagent-hub"
+  },
+  "workItem": {
+    "kind": "github-issue",
+    "externalId": "42"
+  },
+  "workspace": {
+    "sourceRepoPath": "/tmp/devagent-hub",
+    "workBranch": "devagent/verify/task-verify-1",
+    "isolation": "temp-copy",
+    "readOnly": true
+  },
+  "executor": {
+    "executorId": "devagent",
+    "profileName": "default",
+    "provider": "anthropic",
+    "model": "sonnet",
+    "reasoning": "medium",
+    "approvalMode": "suggest"
+  },
+  "constraints": {
+    "maxIterations": 2,
+    "timeoutSec": 1800,
+    "allowNetwork": false,
+    "verifyCommands": [
+      "bun test",
+      "bunx tsc --noEmit"
+    ]
+  },
+  "context": {
+    "summary": "Verify the codebase after implementation."
+  },
+  "expectedArtifacts": [
+    "verification-report"
+  ]
+}

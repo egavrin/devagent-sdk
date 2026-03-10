@@ -1,0 +1,46 @@
+{
+  "protocolVersion": "0.1",
+  "taskId": "task-plan-1",
+  "taskType": "plan",
+  "project": {
+    "id": "project-1",
+    "name": "devagent-hub",
+    "repoRoot": "/tmp/devagent-hub",
+    "repoFullName": "egavrin/devagent-hub"
+  },
+  "workItem": {
+    "kind": "github-issue",
+    "externalId": "42",
+    "title": "Refactor orchestration",
+    "url": "https://github.com/egavrin/devagent-hub/issues/42"
+  },
+  "workspace": {
+    "sourceRepoPath": "/tmp/devagent-hub",
+    "baseRef": "main",
+    "workBranch": "devagent/plan/task-plan-1",
+    "isolation": "git-worktree"
+  },
+  "executor": {
+    "executorId": "claude",
+    "profileName": "strong",
+    "provider": "anthropic",
+    "model": "sonnet",
+    "reasoning": "high",
+    "approvalMode": "suggest"
+  },
+  "constraints": {
+    "maxIterations": 6,
+    "timeoutSec": 1200,
+    "allowNetwork": false
+  },
+  "context": {
+    "summary": "Create a migration plan.",
+    "issueBody": "Plan the full cutover.",
+    "skills": [
+      "state-machine"
+    ]
+  },
+  "expectedArtifacts": [
+    "plan"
+  ]
+}

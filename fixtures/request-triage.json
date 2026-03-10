@@ -1,0 +1,52 @@
+{
+  "protocolVersion": "0.1",
+  "taskId": "task-triage-1",
+  "taskType": "triage",
+  "project": {
+    "id": "project-1",
+    "name": "devagent-hub",
+    "repoRoot": "/tmp/devagent-hub",
+    "repoFullName": "egavrin/devagent-hub"
+  },
+  "workItem": {
+    "kind": "github-issue",
+    "externalId": "42",
+    "title": "Refactor orchestration",
+    "url": "https://github.com/egavrin/devagent-hub/issues/42"
+  },
+  "workspace": {
+    "sourceRepoPath": "/tmp/devagent-hub",
+    "baseRef": "main",
+    "workBranch": "devagent/triage/task-triage-1",
+    "isolation": "git-worktree"
+  },
+  "executor": {
+    "executorId": "devagent",
+    "profileName": "cheap",
+    "provider": "anthropic",
+    "model": "sonnet",
+    "reasoning": "medium",
+    "approvalMode": "suggest"
+  },
+  "constraints": {
+    "maxIterations": 4,
+    "timeoutSec": 900,
+    "allowNetwork": false
+  },
+  "context": {
+    "summary": "Triage the incoming issue.",
+    "issueBody": "The current Hub shells out directly to executors.",
+    "comments": [
+      {
+        "author": "eg",
+        "body": "Keep the current workflow semantics."
+      }
+    ],
+    "skills": [
+      "runner-integration"
+    ]
+  },
+  "expectedArtifacts": [
+    "triage-report"
+  ]
+}

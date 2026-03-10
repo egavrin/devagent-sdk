@@ -1,0 +1,38 @@
+{
+  "protocolVersion": "0.1",
+  "taskId": "task-review-1",
+  "taskType": "review",
+  "project": {
+    "id": "project-1",
+    "name": "devagent-hub"
+  },
+  "workItem": {
+    "kind": "github-issue",
+    "externalId": "42"
+  },
+  "workspace": {
+    "sourceRepoPath": "/tmp/devagent-hub",
+    "workBranch": "devagent/review/task-review-1",
+    "isolation": "git-worktree",
+    "readOnly": true
+  },
+  "executor": {
+    "executorId": "codex",
+    "profileName": "codex",
+    "provider": "openai",
+    "model": "gpt-5-codex",
+    "reasoning": "high",
+    "approvalMode": "suggest"
+  },
+  "constraints": {
+    "maxIterations": 4,
+    "timeoutSec": 1800,
+    "allowNetwork": false
+  },
+  "context": {
+    "summary": "Review the implementation for defects."
+  },
+  "expectedArtifacts": [
+    "review-report"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "protocolVersion": "0.1",
+  "taskId": "task-plan-1",
+  "stage": "plan",
+  "reason": "Plan approval is required before implementation."
+}

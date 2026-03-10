@@ -1,0 +1,8 @@
+{
+  "protocolVersion": "0.1",
+  "taskId": "task-plan-1",
+  "stage": "plan",
+  "decision": "approved",
+  "note": "Proceed.",
+  "decidedAt": "2026-03-10T08:06:00.000Z"
+}
