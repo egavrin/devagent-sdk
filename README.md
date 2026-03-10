@@ -43,6 +43,12 @@ import { validateTaskExecutionRequest } from "@devagent-sdk/validation";
 const request = validateTaskExecutionRequest(payload);
 ```
 
+Example with the shared golden request fixture:
+
+```bash
+cat fixtures/request-golden.json
+```
+
 ## Fixtures
 
 `fixtures/` contains request fixtures for every workflow task type plus event, result, approval, and a shared golden request payload for downstream tests.
@@ -56,6 +62,10 @@ During local MVP development the downstream repos consume these packages through
 - `../devagent-hub`
 
 That keeps the protocol cutover synchronized across all four repos without publishing interim packages.
+
+For the supported local install path, use the bootstrap flow documented in
+[`../devagent-hub/README.md`](../devagent-hub/README.md) and
+[`../devagent-hub/BASELINE_VALIDATION.md`](../devagent-hub/BASELINE_VALIDATION.md).
 
 ## Validated Flow
 
