@@ -6,6 +6,8 @@
       "name": "devagent-sdk",
       "devDependencies": {
         "@types/bun": "^1.3.0",
+        "ajv": "^8.17.1",
+        "ajv-formats": "^3.0.1",
         "typescript": "^5.8.2",
       },
     },
@@ -68,6 +70,10 @@
 
     "@devagent-sdk/schema/@devagent-sdk/types": ["@devagent-sdk/types@file:packages/types", {}],
 
+    "@devagent-sdk/validation/@devagent-sdk/schema": ["@devagent-sdk/schema@file:packages/schema", { "dependencies": { "@devagent-sdk/types": "file:../types" } }],
+
     "@devagent-sdk/validation/@devagent-sdk/types": ["@devagent-sdk/types@file:packages/types", {}],
+
+    "@devagent-sdk/validation/@devagent-sdk/schema/@devagent-sdk/types": ["@devagent-sdk/types@file:packages/types", {}],
   }
 }
