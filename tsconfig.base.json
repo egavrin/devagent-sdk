@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
@@ -12,6 +13,20 @@
     "outDir": "dist",
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "@devagent-sdk/types": [
+        "packages/types/src/index.ts"
+      ],
+      "@devagent-sdk/schema": [
+        "packages/schema/src/index.ts"
+      ],
+      "@devagent-sdk/validation": [
+        "packages/validation/src/index.ts"
+      ],
+      "@devagent-sdk/changelog": [
+        "packages/changelog/src/index.ts"
+      ]
+    }
   }
 }
