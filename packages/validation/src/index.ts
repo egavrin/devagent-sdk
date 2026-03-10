@@ -15,11 +15,12 @@ import type {
   TaskExecutionResult,
 } from "@devagent-sdk/types";
 
-const AjvCtor = ((AjvImport as unknown as { default?: unknown }).default ?? AjvImport) as new (
-  options?: Record<string, unknown>,
-) => any;
-const addFormats = ((addFormatsImport as unknown as { default?: unknown }).default ??
-  addFormatsImport) as (ajv: any) => void;
+type AjvConstructor = typeof import("ajv")["default"];
+type AddFormatsFn = typeof import("ajv-formats")["default"];
+
+const AjvCtor = ((AjvImport as unknown as { default?: AjvConstructor }).default ?? AjvImport) as AjvConstructor;
+const addFormats = ((addFormatsImport as unknown as { default?: AddFormatsFn }).default ??
+  addFormatsImport) as AddFormatsFn;
 
 const ajv = new AjvCtor({
   allErrors: true,
