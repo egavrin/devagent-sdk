@@ -2,6 +2,11 @@
 
 Canonical protocol packages shared by `devagent-hub`, `devagent-runner`, `devagent`, and future executor adapters.
 
+## Maturity
+
+Public alpha component. The repo is public, but the workspace packages remain unpublished and are
+currently consumed through the four-repo sibling bootstrap flow.
+
 ## Packages
 
 - `@devagent-sdk/types`
@@ -67,6 +72,12 @@ For the supported local install path, use the bootstrap flow documented in
 [`../devagent-hub/README.md`](../devagent-hub/README.md) and
 [`../devagent-hub/BASELINE_VALIDATION.md`](../devagent-hub/BASELINE_VALIDATION.md).
 
+## Limitations
+
+- The packages are not published to a package registry yet.
+- The supported contributor setup is the four-repo sibling checkout flow.
+- The validated production path today is the DevAgent executor path, not a multi-executor parity story.
+
 ## Validated Flow
 
 The current validated loop is:
@@ -83,4 +94,5 @@ Hub, Runner, and DevAgent all validate the shared `fixtures/request-golden.json`
 bun install
 bun run typecheck
 bun run test
+bun run check:oss
 ```
