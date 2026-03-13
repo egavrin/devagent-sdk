@@ -2,24 +2,66 @@
   "protocolVersion": "0.1",
   "taskId": "task-golden-1",
   "taskType": "plan",
-  "project": {
-    "id": "project-1",
-    "name": "devagent-hub",
-    "repoRoot": "/tmp/devagent-hub",
-    "repoFullName": "egavrin/devagent-hub"
+  "workspaceRef": {
+    "id": "workspace-1",
+    "name": "devagent",
+    "provider": "github",
+    "primaryRepositoryId": "repo-hub"
   },
+  "repositories": [
+    {
+      "id": "repo-hub",
+      "workspaceId": "workspace-1",
+      "alias": "hub",
+      "name": "devagent-hub",
+      "repoRoot": "/tmp/devagent-hub",
+      "repoFullName": "egavrin/devagent-hub",
+      "defaultBranch": "main",
+      "provider": "github"
+    },
+    {
+      "id": "repo-ui",
+      "workspaceId": "workspace-1",
+      "alias": "ui",
+      "name": "devagent-ui",
+      "repoRoot": "/tmp/devagent-ui",
+      "repoFullName": "egavrin/devagent-ui",
+      "defaultBranch": "main",
+      "provider": "github"
+    }
+  ],
   "workItem": {
     "kind": "github-issue",
     "externalId": "42",
     "title": "Refactor orchestration",
-    "url": "https://github.com/egavrin/devagent-hub/issues/42"
+    "url": "https://github.com/egavrin/devagent-hub/issues/42",
+    "repositoryId": "repo-hub",
+    "state": "open",
+    "labels": ["devagent"]
   },
-  "workspace": {
-    "sourceRepoPath": "/tmp/devagent-hub",
-    "baseRef": "main",
-    "workBranch": "devagent/plan/task-golden-1",
-    "isolation": "git-worktree"
+  "execution": {
+    "workspaceRoot": "/tmp/devagent-workspace",
+    "primaryRepositoryId": "repo-hub",
+    "repositories": [
+      {
+        "repositoryId": "repo-hub",
+        "alias": "hub",
+        "sourceRepoPath": "/tmp/devagent-hub",
+        "baseRef": "main",
+        "workBranch": "devagent/plan/task-golden-1",
+        "isolation": "git-worktree"
+      },
+      {
+        "repositoryId": "repo-ui",
+        "alias": "ui",
+        "sourceRepoPath": "/tmp/devagent-ui",
+        "baseRef": "main",
+        "workBranch": "devagent/plan/task-golden-1",
+        "isolation": "temp-copy"
+      }
+    ]
   },
+  "targetRepositoryIds": ["repo-hub", "repo-ui"],
   "executor": {
     "executorId": "devagent",
     "profileName": "default",
@@ -32,6 +74,14 @@
     "maxIterations": 6,
     "timeoutSec": 900,
     "allowNetwork": true
+  },
+  "capabilities": {
+    "canSyncTasks": true,
+    "canCreateTask": true,
+    "canComment": true,
+    "canReview": true,
+    "canMerge": true,
+    "canOpenReviewable": true
   },
   "context": {
     "summary": "Produce the canonical implementation plan.",

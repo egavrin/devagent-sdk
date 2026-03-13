@@ -2,20 +2,43 @@
   "protocolVersion": "0.1",
   "taskId": "task-repair-1",
   "taskType": "repair",
-  "project": {
-    "id": "project-1",
-    "name": "devagent-hub"
+  "workspaceRef": {
+    "id": "workspace-1",
+    "name": "devagent",
+    "provider": "github",
+    "primaryRepositoryId": "repo-hub"
   },
+  "repositories": [
+    {
+      "id": "repo-hub",
+      "workspaceId": "workspace-1",
+      "alias": "hub",
+      "name": "devagent-hub",
+      "repoRoot": "/tmp/devagent-hub",
+      "repoFullName": "egavrin/devagent-hub",
+      "defaultBranch": "main",
+      "provider": "github"
+    }
+  ],
   "workItem": {
     "kind": "github-issue",
-    "externalId": "42"
+    "externalId": "42",
+    "repositoryId": "repo-hub"
   },
-  "workspace": {
-    "sourceRepoPath": "/tmp/devagent-hub",
-    "baseRef": "main",
-    "workBranch": "devagent/repair/task-repair-1",
-    "isolation": "git-worktree"
+  "execution": {
+    "primaryRepositoryId": "repo-hub",
+    "repositories": [
+      {
+        "repositoryId": "repo-hub",
+        "alias": "hub",
+        "sourceRepoPath": "/tmp/devagent-hub",
+        "baseRef": "main",
+        "workBranch": "devagent/repair/task-repair-1",
+        "isolation": "git-worktree"
+      }
+    ]
   },
+  "targetRepositoryIds": ["repo-hub"],
   "executor": {
     "executorId": "claude",
     "profileName": "strong",
@@ -28,6 +51,14 @@
     "maxIterations": 6,
     "timeoutSec": 2400,
     "allowNetwork": false
+  },
+  "capabilities": {
+    "canSyncTasks": true,
+    "canCreateTask": false,
+    "canComment": true,
+    "canReview": true,
+    "canMerge": true,
+    "canOpenReviewable": true
   },
   "context": {
     "summary": "Repair issues found during review."

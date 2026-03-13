@@ -1,0 +1,73 @@
+{
+  "protocolVersion": "0.1",
+  "taskId": "task-imported-review-1",
+  "taskType": "review",
+  "workspaceRef": {
+    "id": "workspace-1",
+    "name": "devagent",
+    "provider": "github",
+    "primaryRepositoryId": "repo-ui"
+  },
+  "repositories": [
+    {
+      "id": "repo-ui",
+      "workspaceId": "workspace-1",
+      "alias": "ui",
+      "name": "devagent-ui",
+      "repoRoot": "/tmp/devagent-ui",
+      "repoFullName": "egavrin/devagent-ui",
+      "defaultBranch": "main",
+      "provider": "github"
+    }
+  ],
+  "workItem": {
+    "kind": "local-task",
+    "externalId": "review-import-1",
+    "title": "Imported reviewable inspection"
+  },
+  "reviewable": {
+    "provider": "github",
+    "type": "github-pr",
+    "externalId": "99",
+    "title": "Imported PR",
+    "url": "https://github.com/egavrin/devagent-ui/pull/99",
+    "repositoryId": "repo-ui"
+  },
+  "execution": {
+    "primaryRepositoryId": "repo-ui",
+    "repositories": [
+      {
+        "repositoryId": "repo-ui",
+        "alias": "ui",
+        "sourceRepoPath": "/tmp/devagent-ui",
+        "workBranch": "devagent/review/task-imported-review-1",
+        "isolation": "temp-copy",
+        "readOnly": true
+      }
+    ]
+  },
+  "targetRepositoryIds": ["repo-ui"],
+  "executor": {
+    "executorId": "codex",
+    "approvalMode": "suggest"
+  },
+  "constraints": {
+    "maxIterations": 4,
+    "timeoutSec": 1200,
+    "allowNetwork": false
+  },
+  "capabilities": {
+    "canSyncTasks": true,
+    "canCreateTask": true,
+    "canComment": false,
+    "canReview": false,
+    "canMerge": false,
+    "canOpenReviewable": true
+  },
+  "context": {
+    "summary": "Inspect an imported reviewable in read-only mode."
+  },
+  "expectedArtifacts": [
+    "review-report"
+  ]
+}

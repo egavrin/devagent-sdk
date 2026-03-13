@@ -2,18 +2,49 @@ export const PROTOCOL_VERSION = "0.1" as const;
 
 export type ProtocolVersion = typeof PROTOCOL_VERSION;
 
-export type ProjectRef = {
+export type WorkspaceProvider = "github" | "local";
+
+export type WorkspaceRef = {
   id: string;
   name: string;
-  repoRoot?: string;
-  repoFullName?: string;
+  provider: WorkspaceProvider;
+  primaryRepositoryId: string;
 };
 
+export type RepositoryRef = {
+  id: string;
+  workspaceId: string;
+  alias: string;
+  name: string;
+  repoRoot: string;
+  repoFullName?: string;
+  defaultBranch?: string;
+  provider?: WorkspaceProvider;
+};
+
+export type WorkItemKind = "github-issue" | "local-task";
+
 export type WorkItemRef = {
-  kind: "github-issue";
+  id?: string;
+  kind: WorkItemKind;
   externalId: string;
   title?: string;
   url?: string;
+  repositoryId?: string;
+  state?: string;
+  labels?: string[];
+};
+
+export type ReviewableType = "github-pr";
+
+export type ReviewableRef = {
+  id?: string;
+  provider: "github";
+  type: ReviewableType;
+  externalId: string;
+  title?: string;
+  url?: string;
+  repositoryId: string;
 };
 
 export type WorkflowTaskType =
@@ -24,12 +55,20 @@ export type WorkflowTaskType =
   | "review"
   | "repair";
 
-export type WorkspaceSpec = {
+export type RepositoryWorkspaceSpec = {
+  repositoryId: string;
+  alias: string;
   sourceRepoPath: string;
   baseRef?: string;
   workBranch: string;
   isolation: "git-worktree" | "temp-copy";
   readOnly?: boolean;
+};
+
+export type WorkspaceSpec = {
+  workspaceRoot?: string;
+  primaryRepositoryId: string;
+  repositories: RepositoryWorkspaceSpec[];
 };
 
 export type ExecutorSpec = {
@@ -53,6 +92,15 @@ export type CommentRef = {
   body: string;
 };
 
+export type CapabilitySet = {
+  canSyncTasks: boolean;
+  canCreateTask: boolean;
+  canComment: boolean;
+  canReview: boolean;
+  canMerge: boolean;
+  canOpenReviewable: boolean;
+};
+
 export type ArtifactKind =
   | "triage-report"
   | "plan"
@@ -72,11 +120,15 @@ export type TaskExecutionRequest = {
   protocolVersion: ProtocolVersion;
   taskId: string;
   taskType: WorkflowTaskType;
-  project: ProjectRef;
+  workspaceRef: WorkspaceRef;
+  repositories: RepositoryRef[];
   workItem: WorkItemRef;
-  workspace: WorkspaceSpec;
+  reviewable?: ReviewableRef;
+  execution: WorkspaceSpec;
+  targetRepositoryIds: string[];
   executor: ExecutorSpec;
   constraints: TaskConstraints;
+  capabilities: CapabilitySet;
   context: {
     summary?: string;
     issueBody?: string;

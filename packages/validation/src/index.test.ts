@@ -19,6 +19,8 @@ import verifyRequest from "../../../fixtures/request-verify.json" with { type: "
 import reviewRequest from "../../../fixtures/request-review.json" with { type: "json" };
 import repairRequest from "../../../fixtures/request-repair.json" with { type: "json" };
 import goldenRequest from "../../../fixtures/request-golden.json" with { type: "json" };
+import localTaskRequest from "../../../fixtures/request-local-task.json" with { type: "json" };
+import importedReviewRequest from "../../../fixtures/request-review-imported.json" with { type: "json" };
 import taskEvent from "../../../fixtures/event-progress.json" with { type: "json" };
 import taskResult from "../../../fixtures/result-success.json" with { type: "json" };
 import approvalRequest from "../../../fixtures/approval-request.json" with { type: "json" };
@@ -31,6 +33,8 @@ test("validates all request fixtures", () => {
   expect(validateTaskExecutionRequest(verifyRequest).taskType).toBe("verify");
   expect(validateTaskExecutionRequest(reviewRequest).taskType).toBe("review");
   expect(validateTaskExecutionRequest(repairRequest).taskType).toBe("repair");
+  expect(validateTaskExecutionRequest(localTaskRequest).workItem.kind).toBe("local-task");
+  expect(validateTaskExecutionRequest(importedReviewRequest).reviewable?.type).toBe("github-pr");
 });
 
 test("validates event result and approval fixtures", () => {
@@ -42,6 +46,7 @@ test("validates event result and approval fixtures", () => {
 
 test("validates the shared golden request fixture", () => {
   expect(validateTaskExecutionRequest(goldenRequest).taskType).toBe("plan");
+  expect(validateTaskExecutionRequest(goldenRequest).targetRepositoryIds).toHaveLength(2);
 });
 
 test("rejects invalid protocol version", () => {

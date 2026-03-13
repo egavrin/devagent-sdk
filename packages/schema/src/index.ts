@@ -28,39 +28,88 @@ const artifactKind = {
 
 export const artifactKindSchema = artifactKind;
 
-const projectRef = {
+const workspaceProvider = {
+  type: "string",
+  enum: ["github", "local"],
+} as const;
+
+const workspaceRef = {
   type: "object",
   additionalProperties: false,
-  required: ["id", "name"],
+  required: ["id", "name", "provider", "primaryRepositoryId"],
   properties: {
     id: { type: "string", minLength: 1 },
     name: { type: "string", minLength: 1 },
-    repoRoot: { type: "string", minLength: 1 },
-    repoFullName: { type: "string", minLength: 1 },
+    provider: workspaceProvider,
+    primaryRepositoryId: { type: "string", minLength: 1 },
   },
 } as const;
 
-export const projectRefSchema = projectRef;
+export const workspaceRefSchema = workspaceRef;
+
+const repositoryRef = {
+  type: "object",
+  additionalProperties: false,
+  required: ["id", "workspaceId", "alias", "name", "repoRoot"],
+  properties: {
+    id: { type: "string", minLength: 1 },
+    workspaceId: { type: "string", minLength: 1 },
+    alias: { type: "string", minLength: 1 },
+    name: { type: "string", minLength: 1 },
+    repoRoot: { type: "string", minLength: 1 },
+    repoFullName: { type: "string", minLength: 1 },
+    defaultBranch: { type: "string", minLength: 1 },
+    provider: workspaceProvider,
+  },
+} as const;
+
+export const repositoryRefSchema = repositoryRef;
 
 const workItemRef = {
   type: "object",
   additionalProperties: false,
   required: ["kind", "externalId"],
   properties: {
-    kind: { type: "string", const: "github-issue" },
+    id: { type: "string", minLength: 1 },
+    kind: { type: "string", enum: ["github-issue", "local-task"] },
     externalId: { type: "string", minLength: 1 },
     title: { type: "string" },
     url: { type: "string", minLength: 1 },
+    repositoryId: { type: "string", minLength: 1 },
+    state: { type: "string", minLength: 1 },
+    labels: {
+      type: "array",
+      items: { type: "string", minLength: 1 },
+    },
   },
 } as const;
 
 export const workItemRefSchema = workItemRef;
 
-const workspaceSpec = {
+const reviewableRef = {
   type: "object",
   additionalProperties: false,
-  required: ["sourceRepoPath", "workBranch", "isolation"],
+  required: ["provider", "type", "externalId", "repositoryId"],
   properties: {
+    id: { type: "string", minLength: 1 },
+    provider: { type: "string", const: "github" },
+    type: { type: "string", const: "github-pr" },
+    externalId: { type: "string", minLength: 1 },
+    title: { type: "string" },
+    url: { type: "string", minLength: 1 },
+    repositoryId: { type: "string", minLength: 1 },
+  },
+} as const;
+
+export const reviewableRefSchema = reviewableRef;
+
+const repositoryWorkspaceSpec = {
+  type: "object",
+  additionalProperties: false,
+  required: ["repositoryId", "alias", "sourceRepoPath", "workBranch", "isolation"],
+  properties: {
+    repositoryId: { type: "string", minLength: 1 },
+    alias: { type: "string", minLength: 1 },
     sourceRepoPath: { type: "string", minLength: 1 },
     baseRef: { type: "string", minLength: 1 },
     workBranch: { type: "string", minLength: 1 },
@@ -69,6 +118,21 @@ const workspaceSpec = {
       enum: ["git-worktree", "temp-copy"],
     },
     readOnly: { type: "boolean" },
+  },
+} as const;
+
+const workspaceSpec = {
+  type: "object",
+  additionalProperties: false,
+  required: ["primaryRepositoryId", "repositories"],
+  properties: {
+    workspaceRoot: { type: "string", minLength: 1 },
+    primaryRepositoryId: { type: "string", minLength: 1 },
+    repositories: {
+      type: "array",
+      minItems: 1,
+      items: repositoryWorkspaceSpec,
+    },
   },
 } as const;
 
@@ -121,6 +185,29 @@ const commentRef = {
 
 export const commentRefSchema = commentRef;
 
+const capabilitySet = {
+  type: "object",
+  additionalProperties: false,
+  required: [
+    "canSyncTasks",
+    "canCreateTask",
+    "canComment",
+    "canReview",
+    "canMerge",
+    "canOpenReviewable",
+  ],
+  properties: {
+    canSyncTasks: { type: "boolean" },
+    canCreateTask: { type: "boolean" },
+    canComment: { type: "boolean" },
+    canReview: { type: "boolean" },
+    canMerge: { type: "boolean" },
+    canOpenReviewable: { type: "boolean" },
+  },
+} as const;
+
+export const capabilitySetSchema = capabilitySet;
+
 const artifactRef = {
   type: "object",
   additionalProperties: false,
@@ -143,11 +230,14 @@ export const taskExecutionRequestSchema = {
     "protocolVersion",
     "taskId",
     "taskType",
-    "project",
+    "workspaceRef",
+    "repositories",
     "workItem",
-    "workspace",
+    "execution",
+    "targetRepositoryIds",
     "executor",
     "constraints",
+    "capabilities",
     "context",
     "expectedArtifacts",
   ],
@@ -155,11 +245,23 @@ export const taskExecutionRequestSchema = {
     protocolVersion,
     taskId: { type: "string", minLength: 1 },
     taskType: workflowTaskType,
-    project: projectRef,
+    workspaceRef,
+    repositories: {
+      type: "array",
+      minItems: 1,
+      items: repositoryRef,
+    },
     workItem: workItemRef,
-    workspace: workspaceSpec,
+    reviewable: reviewableRef,
+    execution: workspaceSpec,
+    targetRepositoryIds: {
+      type: "array",
+      minItems: 1,
+      items: { type: "string", minLength: 1 },
+    },
     executor: executorSpec,
     constraints: taskConstraints,
+    capabilities: capabilitySet,
     context: {
       type: "object",
       additionalProperties: false,
@@ -332,20 +434,23 @@ export const approvalDecisionSchema = {
   },
 } as const;
 
-export const schemas = {
+export default {
   protocolVersionSchema,
   workflowTaskTypeSchema,
   artifactKindSchema,
-  projectRefSchema,
+  workspaceRefSchema,
+  repositoryRefSchema,
   workItemRefSchema,
+  reviewableRefSchema,
   workspaceSpecSchema,
   executorSpecSchema,
   taskConstraintsSchema,
   commentRefSchema,
+  capabilitySetSchema,
   artifactRefSchema,
   taskExecutionRequestSchema,
   taskExecutionEventSchema,
   taskExecutionResultSchema,
   approvalRequestSchema,
   approvalDecisionSchema,
-} as const;
+};

@@ -2,24 +2,47 @@
   "protocolVersion": "0.1",
   "taskId": "task-triage-1",
   "taskType": "triage",
-  "project": {
-    "id": "project-1",
-    "name": "devagent-hub",
-    "repoRoot": "/tmp/devagent-hub",
-    "repoFullName": "egavrin/devagent-hub"
+  "workspaceRef": {
+    "id": "workspace-1",
+    "name": "devagent",
+    "provider": "github",
+    "primaryRepositoryId": "repo-hub"
   },
+  "repositories": [
+    {
+      "id": "repo-hub",
+      "workspaceId": "workspace-1",
+      "alias": "hub",
+      "name": "devagent-hub",
+      "repoRoot": "/tmp/devagent-hub",
+      "repoFullName": "egavrin/devagent-hub",
+      "defaultBranch": "main",
+      "provider": "github"
+    }
+  ],
   "workItem": {
     "kind": "github-issue",
     "externalId": "42",
     "title": "Refactor orchestration",
-    "url": "https://github.com/egavrin/devagent-hub/issues/42"
+    "url": "https://github.com/egavrin/devagent-hub/issues/42",
+    "repositoryId": "repo-hub",
+    "state": "open",
+    "labels": ["devagent"]
   },
-  "workspace": {
-    "sourceRepoPath": "/tmp/devagent-hub",
-    "baseRef": "main",
-    "workBranch": "devagent/triage/task-triage-1",
-    "isolation": "git-worktree"
+  "execution": {
+    "primaryRepositoryId": "repo-hub",
+    "repositories": [
+      {
+        "repositoryId": "repo-hub",
+        "alias": "hub",
+        "sourceRepoPath": "/tmp/devagent-hub",
+        "baseRef": "main",
+        "workBranch": "devagent/triage/task-triage-1",
+        "isolation": "git-worktree"
+      }
+    ]
   },
+  "targetRepositoryIds": ["repo-hub"],
   "executor": {
     "executorId": "devagent",
     "profileName": "cheap",
@@ -32,6 +55,14 @@
     "maxIterations": 4,
     "timeoutSec": 900,
     "allowNetwork": false
+  },
+  "capabilities": {
+    "canSyncTasks": true,
+    "canCreateTask": false,
+    "canComment": true,
+    "canReview": true,
+    "canMerge": true,
+    "canOpenReviewable": true
   },
   "context": {
     "summary": "Triage the incoming issue.",

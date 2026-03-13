@@ -1,0 +1,66 @@
+{
+  "protocolVersion": "0.1",
+  "taskId": "task-local-1",
+  "taskType": "plan",
+  "workspaceRef": {
+    "id": "workspace-local-1",
+    "name": "local workspace",
+    "provider": "local",
+    "primaryRepositoryId": "repo-ui"
+  },
+  "repositories": [
+    {
+      "id": "repo-ui",
+      "workspaceId": "workspace-local-1",
+      "alias": "ui",
+      "name": "devagent-ui",
+      "repoRoot": "/tmp/devagent-ui",
+      "defaultBranch": "main",
+      "provider": "local"
+    }
+  ],
+  "workItem": {
+    "kind": "local-task",
+    "externalId": "local-1",
+    "title": "Investigate grouped workflow history",
+    "repositoryId": "repo-ui",
+    "state": "open",
+    "labels": ["manual"]
+  },
+  "execution": {
+    "primaryRepositoryId": "repo-ui",
+    "repositories": [
+      {
+        "repositoryId": "repo-ui",
+        "alias": "ui",
+        "sourceRepoPath": "/tmp/devagent-ui",
+        "baseRef": "main",
+        "workBranch": "devagent/plan/task-local-1",
+        "isolation": "temp-copy"
+      }
+    ]
+  },
+  "targetRepositoryIds": ["repo-ui"],
+  "executor": {
+    "executorId": "devagent",
+    "approvalMode": "suggest"
+  },
+  "constraints": {
+    "maxIterations": 3,
+    "timeoutSec": 600
+  },
+  "capabilities": {
+    "canSyncTasks": false,
+    "canCreateTask": true,
+    "canComment": false,
+    "canReview": false,
+    "canMerge": false,
+    "canOpenReviewable": false
+  },
+  "context": {
+    "summary": "Plan a local task."
+  },
+  "expectedArtifacts": [
+    "plan"
+  ]
+}
