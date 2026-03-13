@@ -32,13 +32,25 @@ Primary entities:
 
 Supporting entities:
 
-- `ProjectRef`
+- `WorkspaceRef`
+- `RepositoryRef`
 - `WorkItemRef`
+- `ReviewableRef`
 - `WorkspaceSpec`
 - `ExecutorSpec`
 - `TaskConstraints`
+- `CapabilitySet`
 - `ArtifactKind`
 - `ArtifactRef`
+
+`TaskExecutionRequest` now models workspace-aware execution explicitly:
+
+- `workspaceRef` identifies the workspace and its primary repository.
+- `repositories` describes the repositories available to the task.
+- `execution` describes per-repository checkout/isolation details for the run.
+- `targetRepositoryIds` marks the repositories a writable stage is allowed to change.
+- `reviewable` carries imported PR context for review flows when present.
+- `capabilities` advertises the platform actions available to the executor.
 
 ## Validation
 
@@ -56,7 +68,7 @@ cat fixtures/request-golden.json
 
 ## Fixtures
 
-`fixtures/` contains request fixtures for every workflow task type plus event, result, approval, and a shared golden request payload for downstream tests.
+`fixtures/` contains request fixtures for every workflow task type plus event, result, approval, local-task, imported-review, and a shared golden multi-repository request payload for downstream tests.
 
 ## Local Development Wiring
 
