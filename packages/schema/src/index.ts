@@ -173,6 +173,32 @@ const taskConstraints = {
 
 export const taskConstraintsSchema = taskConstraints;
 
+const continuationSession = {
+  type: "object",
+  additionalProperties: false,
+  required: ["kind", "payload"],
+  properties: {
+    kind: { type: "string", minLength: 1 },
+    payload: {
+      type: "object",
+    },
+  },
+} as const;
+
+const taskContinuation = {
+  type: "object",
+  additionalProperties: false,
+  properties: {
+    session: continuationSession,
+    mode: { type: "string", enum: ["fresh", "resume"] },
+    reason: {
+      type: "string",
+      enum: ["retry_no_progress", "plan_rework", "repair_followup", "pr_followup"],
+    },
+    instructions: { type: "string" },
+  },
+} as const;
+
 const commentRef = {
   type: "object",
   additionalProperties: false,
@@ -261,6 +287,7 @@ export const taskExecutionRequestSchema = {
     },
     executor: executorSpec,
     constraints: taskConstraints,
+    continuation: taskContinuation,
     capabilities: capabilitySet,
     context: {
       type: "object",
@@ -383,6 +410,15 @@ export const taskExecutionResultSchema = {
     artifacts: {
       type: "array",
       items: artifactRef,
+    },
+    session: continuationSession,
+    outcome: {
+      type: "string",
+      enum: ["completed", "no_progress"],
+    },
+    outcomeReason: {
+      type: "string",
+      enum: ["no_code", "iteration_limit", "empty_artifact", "no_repo_changes"],
     },
     metrics: {
       type: "object",
