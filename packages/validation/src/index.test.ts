@@ -75,12 +75,24 @@ test("accepts additive fields within protocol 0.1", () => {
   const request = validateTaskExecutionRequest(goldenRequest);
   const additiveRequest = {
     ...request,
+    continuation: {
+      mode: "resume",
+      reason: "retry_no_progress",
+      instructions: "Continue from the previous session and make the code change.",
+      session: {
+        kind: "devagent-headless-v1",
+        payload: {
+          messages: [],
+        },
+      },
+    },
     context: {
       ...request.context,
       extraInstructions: [...(request.context.extraInstructions ?? []), "Preserve branch reuse."],
     },
   };
   expect(validateTaskExecutionRequest(additiveRequest).context.extraInstructions).toContain("Preserve branch reuse.");
+  expect(validateTaskExecutionRequest(additiveRequest).continuation?.mode).toBe("resume");
 
   const additiveResult = {
     ...taskResult,
@@ -88,8 +100,17 @@ test("accepts additive fields within protocol 0.1", () => {
       code: "NONE",
       message: "No failure",
     },
+    outcome: "no_progress",
+    outcomeReason: "iteration_limit",
+    session: {
+      kind: "devagent-headless-v1",
+      payload: {
+        messages: [],
+      },
+    },
   };
   expect(validateTaskExecutionResult(additiveResult).error?.code).toBe("NONE");
+  expect(validateTaskExecutionResult(additiveResult).outcomeReason).toBe("iteration_limit");
 
   const additiveApproval = {
     ...approvalDecision,

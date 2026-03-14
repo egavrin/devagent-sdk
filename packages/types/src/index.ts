@@ -87,6 +87,26 @@ export type TaskConstraints = {
   verifyCommands?: string[];
 };
 
+export type ContinuationMode = "fresh" | "resume";
+
+export type ContinuationReason =
+  | "retry_no_progress"
+  | "plan_rework"
+  | "repair_followup"
+  | "pr_followup";
+
+export type ContinuationSession = {
+  kind: string;
+  payload: Record<string, unknown>;
+};
+
+export type TaskContinuation = {
+  session?: ContinuationSession;
+  mode?: ContinuationMode;
+  reason?: ContinuationReason;
+  instructions?: string;
+};
+
 export type CommentRef = {
   author?: string;
   body: string;
@@ -128,6 +148,7 @@ export type TaskExecutionRequest = {
   targetRepositoryIds: string[];
   executor: ExecutorSpec;
   constraints: TaskConstraints;
+  continuation?: TaskContinuation;
   capabilities: CapabilitySet;
   context: {
     summary?: string;
@@ -139,6 +160,14 @@ export type TaskExecutionRequest = {
   };
   expectedArtifacts: ArtifactKind[];
 };
+
+export type TaskOutcome = "completed" | "no_progress";
+
+export type TaskOutcomeReason =
+  | "no_code"
+  | "iteration_limit"
+  | "empty_artifact"
+  | "no_repo_changes";
 
 export type TaskExecutionEvent =
   | {
@@ -189,6 +218,9 @@ export type TaskExecutionResult = {
   taskId: string;
   status: "success" | "failed" | "cancelled";
   artifacts: ArtifactRef[];
+  session?: ContinuationSession;
+  outcome?: TaskOutcome;
+  outcomeReason?: TaskOutcomeReason;
   metrics: {
     startedAt: string;
     finishedAt: string;
