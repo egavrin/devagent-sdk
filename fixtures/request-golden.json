@@ -1,7 +1,7 @@
 {
   "protocolVersion": "0.1",
   "taskId": "task-golden-1",
-  "taskType": "plan",
+  "taskType": "design",
   "workspaceRef": {
     "id": "workspace-1",
     "name": "devagent",
@@ -75,6 +75,27 @@
     "timeoutSec": 900,
     "allowNetwork": true
   },
+  "issueUnit": {
+    "id": "issue-unit-1",
+    "title": "Refactor workflow state transitions",
+    "sequence": 1,
+    "dependencyIds": [],
+    "acceptanceCriteria": [
+      "Design documents the state machine cutover.",
+      "Implementation uses approved upstream artifacts."
+    ],
+    "linkedArtifactVersionIds": [
+      "artifact-version-design-v1"
+    ]
+  },
+  "contextBundle": {
+    "id": "bundle-1",
+    "artifactVersionIds": [
+      "artifact-version-task-spec-v1",
+      "artifact-version-design-v1"
+    ],
+    "summary": "Approved task and design artifacts for the first issue unit."
+  },
   "capabilities": {
     "canSyncTasks": true,
     "canCreateTask": true,
@@ -106,6 +127,7 @@
     ]
   },
   "expectedArtifacts": [
-    "plan"
+    "design-doc",
+    "decision-log"
   ]
 }

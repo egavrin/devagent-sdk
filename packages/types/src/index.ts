@@ -48,12 +48,18 @@ export type ReviewableRef = {
 };
 
 export type WorkflowTaskType =
+  | "task-intake"
+  | "design"
+  | "breakdown"
+  | "issue-generation"
+  | "test-plan"
   | "triage"
   | "plan"
   | "implement"
   | "verify"
   | "review"
-  | "repair";
+  | "repair"
+  | "completion";
 
 export type RepositoryWorkspaceSpec = {
   repositoryId: string;
@@ -112,6 +118,77 @@ export type CommentRef = {
   body: string;
 };
 
+export type IssueUnitRef = {
+  id: string;
+  title: string;
+  sequence: number;
+  dependencyIds: string[];
+  acceptanceCriteria: string[];
+  linkedArtifactVersionIds: string[];
+};
+
+export type ContextBundleRef = {
+  id: string;
+  artifactVersionIds: string[];
+  summary: string;
+};
+
+export type BreakdownTaskGrounding = {
+  designRefs: string[];
+  repoPaths: string[];
+  codeSymbols: string[];
+};
+
+export type BreakdownTask = {
+  id: string;
+  title: string;
+  checklistLabel: string;
+  objective: string;
+  rationale: string;
+  grounding: BreakdownTaskGrounding;
+  dependencies: string[];
+  acceptanceCriteria: string[];
+  expectedChanges: string[];
+  validation: string[];
+  riskNotes: string[];
+  sizeBudget: {
+    maxEstimatedChangedLines: number;
+    estimateReason: string;
+  };
+};
+
+export type BreakdownDoc = {
+  summary: string;
+  executionOrder: string[];
+  tasks: BreakdownTask[];
+};
+
+export type IssueSpecGrounding = {
+  repoPaths: string[];
+  codeSymbols: string[];
+};
+
+export type IssueSpecRecord = {
+  id: string;
+  title: string;
+  problemStatement: string;
+  rationale: string;
+  scope: string[];
+  acceptanceCriteria: string[];
+  dependencies: string[];
+  linkedDesignSections: string[];
+  linkedBreakdownTaskIds: string[];
+  grounding: IssueSpecGrounding;
+  requiredTests: string[];
+  outOfScope: string[];
+  implementationNotes: string[];
+};
+
+export type IssueSpecDoc = {
+  summary: string;
+  issues: IssueSpecRecord[];
+};
+
 export type CapabilitySet = {
   canSyncTasks: boolean;
   canCreateTask: boolean;
@@ -122,6 +199,15 @@ export type CapabilitySet = {
 };
 
 export type ArtifactKind =
+  | "task-spec"
+  | "design-doc"
+  | "breakdown-doc"
+  | "issue-spec"
+  | "implementation-plan"
+  | "test-plan"
+  | "change-set"
+  | "workflow-summary"
+  | "decision-log"
   | "triage-report"
   | "plan"
   | "implementation-summary"
@@ -129,9 +215,12 @@ export type ArtifactKind =
   | "review-report"
   | "final-summary";
 
+export type ArtifactVariant = "structured" | "rendered";
+
 export type ArtifactRef = {
   kind: ArtifactKind;
   path: string;
+  variant?: ArtifactVariant;
   mimeType?: string;
   createdAt: string;
 };
@@ -149,6 +238,8 @@ export type TaskExecutionRequest = {
   executor: ExecutorSpec;
   constraints: TaskConstraints;
   continuation?: TaskContinuation;
+  issueUnit?: IssueUnitRef;
+  contextBundle?: ContextBundleRef;
   capabilities: CapabilitySet;
   context: {
     summary?: string;

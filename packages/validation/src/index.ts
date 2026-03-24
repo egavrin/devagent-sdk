@@ -3,6 +3,8 @@ import addFormatsImport from "ajv-formats";
 import {
   approvalDecisionSchema,
   approvalRequestSchema,
+  breakdownDocSchema,
+  issueSpecDocSchema,
   taskExecutionEventSchema,
   taskExecutionRequestSchema,
   taskExecutionResultSchema,
@@ -10,6 +12,8 @@ import {
 import type {
   ApprovalDecision,
   ApprovalRequest,
+  BreakdownDoc,
+  IssueSpecDoc,
   TaskExecutionEvent,
   TaskExecutionRequest,
   TaskExecutionResult,
@@ -34,6 +38,8 @@ const taskExecutionResultValidator = ajv.compile(taskExecutionResultSchema);
 const taskExecutionEventValidator = ajv.compile(taskExecutionEventSchema);
 const approvalRequestValidator = ajv.compile(approvalRequestSchema);
 const approvalDecisionValidator = ajv.compile(approvalDecisionSchema);
+const breakdownDocValidator = ajv.compile(breakdownDocSchema);
+const issueSpecDocValidator = ajv.compile(issueSpecDocSchema);
 
 function buildValidationError(prefix: string, errors: ErrorObject[] | null | undefined): Error {
   const details =
@@ -75,4 +81,18 @@ export function validateApprovalDecision(value: unknown): ApprovalDecision {
     throw buildValidationError("Invalid ApprovalDecision", approvalDecisionValidator.errors);
   }
   return value as ApprovalDecision;
+}
+
+export function validateBreakdownDoc(value: unknown): BreakdownDoc {
+  if (!breakdownDocValidator(value)) {
+    throw buildValidationError("Invalid BreakdownDoc", breakdownDocValidator.errors);
+  }
+  return value as BreakdownDoc;
+}
+
+export function validateIssueSpecDoc(value: unknown): IssueSpecDoc {
+  if (!issueSpecDocValidator(value)) {
+    throw buildValidationError("Invalid IssueSpecDoc", issueSpecDocValidator.errors);
+  }
+  return value as IssueSpecDoc;
 }

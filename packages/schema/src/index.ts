@@ -9,7 +9,20 @@ export const protocolVersionSchema = protocolVersion;
 
 const workflowTaskType = {
   type: "string",
-  enum: ["triage", "plan", "implement", "verify", "review", "repair"],
+  enum: [
+    "task-intake",
+    "design",
+    "breakdown",
+    "issue-generation",
+    "test-plan",
+    "triage",
+    "plan",
+    "implement",
+    "verify",
+    "review",
+    "repair",
+    "completion",
+  ],
 } as const;
 
 export const workflowTaskTypeSchema = workflowTaskType;
@@ -17,6 +30,15 @@ export const workflowTaskTypeSchema = workflowTaskType;
 const artifactKind = {
   type: "string",
   enum: [
+    "task-spec",
+    "design-doc",
+    "breakdown-doc",
+    "issue-spec",
+    "implementation-plan",
+    "test-plan",
+    "change-set",
+    "workflow-summary",
+    "decision-log",
     "triage-report",
     "plan",
     "implementation-summary",
@@ -211,6 +233,43 @@ const commentRef = {
 
 export const commentRefSchema = commentRef;
 
+const issueUnitRef = {
+  type: "object",
+  additionalProperties: false,
+  required: ["id", "title", "sequence", "dependencyIds", "acceptanceCriteria", "linkedArtifactVersionIds"],
+  properties: {
+    id: { type: "string", minLength: 1 },
+    title: { type: "string", minLength: 1 },
+    sequence: { type: "integer", minimum: 1 },
+    dependencyIds: {
+      type: "array",
+      items: { type: "string", minLength: 1 },
+    },
+    acceptanceCriteria: {
+      type: "array",
+      items: { type: "string", minLength: 1 },
+    },
+    linkedArtifactVersionIds: {
+      type: "array",
+      items: { type: "string", minLength: 1 },
+    },
+  },
+} as const;
+
+const contextBundleRef = {
+  type: "object",
+  additionalProperties: false,
+  required: ["id", "artifactVersionIds", "summary"],
+  properties: {
+    id: { type: "string", minLength: 1 },
+    artifactVersionIds: {
+      type: "array",
+      items: { type: "string", minLength: 1 },
+    },
+    summary: { type: "string", minLength: 1 },
+  },
+} as const;
+
 const capabilitySet = {
   type: "object",
   additionalProperties: false,
@@ -234,6 +293,203 @@ const capabilitySet = {
 
 export const capabilitySetSchema = capabilitySet;
 
+const breakdownTaskGroundingSchema = {
+  type: "object",
+  additionalProperties: false,
+  required: ["designRefs", "repoPaths", "codeSymbols"],
+  properties: {
+    designRefs: {
+      type: "array",
+      minItems: 1,
+      items: { type: "string", minLength: 1 },
+    },
+    repoPaths: {
+      type: "array",
+      minItems: 1,
+      items: { type: "string", minLength: 1 },
+    },
+    codeSymbols: {
+      type: "array",
+      items: { type: "string", minLength: 1 },
+    },
+  },
+} as const;
+
+const breakdownTaskSchema = {
+  type: "object",
+  additionalProperties: false,
+  required: [
+    "id",
+    "title",
+    "checklistLabel",
+    "objective",
+    "rationale",
+    "grounding",
+    "dependencies",
+    "acceptanceCriteria",
+    "expectedChanges",
+    "validation",
+    "riskNotes",
+    "sizeBudget",
+  ],
+  properties: {
+    id: { type: "string", minLength: 1 },
+    title: { type: "string", minLength: 1 },
+    checklistLabel: { type: "string", minLength: 1 },
+    objective: { type: "string", minLength: 1 },
+    rationale: { type: "string", minLength: 1 },
+    grounding: breakdownTaskGroundingSchema,
+    dependencies: {
+      type: "array",
+      items: { type: "string", minLength: 1 },
+    },
+    acceptanceCriteria: {
+      type: "array",
+      minItems: 1,
+      items: { type: "string", minLength: 1 },
+    },
+    expectedChanges: {
+      type: "array",
+      minItems: 1,
+      items: { type: "string", minLength: 1 },
+    },
+    validation: {
+      type: "array",
+      minItems: 1,
+      items: { type: "string", minLength: 1 },
+    },
+    riskNotes: {
+      type: "array",
+      items: { type: "string", minLength: 1 },
+    },
+    sizeBudget: {
+      type: "object",
+      additionalProperties: false,
+      required: ["maxEstimatedChangedLines", "estimateReason"],
+      properties: {
+        maxEstimatedChangedLines: { type: "integer", minimum: 1, maximum: 500 },
+        estimateReason: { type: "string", minLength: 1 },
+      },
+    },
+  },
+} as const;
+
+export const breakdownDocSchema = {
+  $id: "BreakdownDoc",
+  type: "object",
+  additionalProperties: false,
+  required: ["summary", "executionOrder", "tasks"],
+  properties: {
+    summary: { type: "string", minLength: 1 },
+    executionOrder: {
+      type: "array",
+      minItems: 1,
+      items: { type: "string", minLength: 1 },
+    },
+    tasks: {
+      type: "array",
+      minItems: 1,
+      items: breakdownTaskSchema,
+    },
+  },
+} as const;
+
+const issueSpecGroundingSchema = {
+  type: "object",
+  additionalProperties: false,
+  required: ["repoPaths", "codeSymbols"],
+  properties: {
+    repoPaths: {
+      type: "array",
+      minItems: 1,
+      items: { type: "string", minLength: 1 },
+    },
+    codeSymbols: {
+      type: "array",
+      items: { type: "string", minLength: 1 },
+    },
+  },
+} as const;
+
+const issueSpecRecordSchema = {
+  type: "object",
+  additionalProperties: false,
+  required: [
+    "id",
+    "title",
+    "problemStatement",
+    "rationale",
+    "scope",
+    "acceptanceCriteria",
+    "dependencies",
+    "linkedDesignSections",
+    "linkedBreakdownTaskIds",
+    "grounding",
+    "requiredTests",
+    "outOfScope",
+    "implementationNotes",
+  ],
+  properties: {
+    id: { type: "string", minLength: 1 },
+    title: { type: "string", minLength: 1 },
+    problemStatement: { type: "string", minLength: 1 },
+    rationale: { type: "string", minLength: 1 },
+    scope: {
+      type: "array",
+      minItems: 1,
+      items: { type: "string", minLength: 1 },
+    },
+    acceptanceCriteria: {
+      type: "array",
+      minItems: 1,
+      items: { type: "string", minLength: 1 },
+    },
+    dependencies: {
+      type: "array",
+      items: { type: "string", minLength: 1 },
+    },
+    linkedDesignSections: {
+      type: "array",
+      minItems: 1,
+      items: { type: "string", minLength: 1 },
+    },
+    linkedBreakdownTaskIds: {
+      type: "array",
+      minItems: 1,
+      items: { type: "string", minLength: 1 },
+    },
+    grounding: issueSpecGroundingSchema,
+    requiredTests: {
+      type: "array",
+      minItems: 1,
+      items: { type: "string", minLength: 1 },
+    },
+    outOfScope: {
+      type: "array",
+      items: { type: "string", minLength: 1 },
+    },
+    implementationNotes: {
+      type: "array",
+      items: { type: "string", minLength: 1 },
+    },
+  },
+} as const;
+
+export const issueSpecDocSchema = {
+  $id: "IssueSpecDoc",
+  type: "object",
+  additionalProperties: false,
+  required: ["summary", "issues"],
+  properties: {
+    summary: { type: "string", minLength: 1 },
+    issues: {
+      type: "array",
+      minItems: 1,
+      items: issueSpecRecordSchema,
+    },
+  },
+} as const;
+
 const artifactRef = {
   type: "object",
   additionalProperties: false,
@@ -241,6 +497,7 @@ const artifactRef = {
   properties: {
     kind: artifactKind,
     path: { type: "string", minLength: 1 },
+    variant: { type: "string", enum: ["structured", "rendered"] },
     mimeType: { type: "string", minLength: 1 },
     createdAt: { type: "string", format: "date-time" },
   },
@@ -288,6 +545,8 @@ export const taskExecutionRequestSchema = {
     executor: executorSpec,
     constraints: taskConstraints,
     continuation: taskContinuation,
+    issueUnit: issueUnitRef,
+    contextBundle: contextBundleRef,
     capabilities: capabilitySet,
     context: {
       type: "object",
@@ -483,6 +742,8 @@ export default {
   taskConstraintsSchema,
   commentRefSchema,
   capabilitySetSchema,
+  breakdownDocSchema,
+  issueSpecDocSchema,
   artifactRefSchema,
   taskExecutionRequestSchema,
   taskExecutionEventSchema,

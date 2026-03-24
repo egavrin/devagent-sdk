@@ -4,8 +4,16 @@
   "status": "success",
   "artifacts": [
     {
-      "kind": "plan",
-      "path": "/tmp/artifacts/task-plan-1/plan.md",
+      "kind": "design-doc",
+      "path": "/tmp/artifacts/task-plan-1/design-doc.json",
+      "variant": "structured",
+      "mimeType": "application/json",
+      "createdAt": "2026-03-10T08:05:00.000Z"
+    },
+    {
+      "kind": "design-doc",
+      "path": "/tmp/artifacts/task-plan-1/design-doc.md",
+      "variant": "rendered",
       "mimeType": "text/markdown",
       "createdAt": "2026-03-10T08:05:00.000Z"
     }
